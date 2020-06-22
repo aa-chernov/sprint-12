@@ -1,49 +1,22 @@
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable no-underscore-dangle */
+
 const usersRouter = require('express').Router();
-const fs = require('fs');
 const path = require('path');
 
-const usersPath = path.join(__dirname, '../data/users.json');
-
-const users = (usersParse) => {
-  fs.readFile(usersPath, { encoding: 'utf8' }, (err, data) => {
-    const usersdb = JSON.parse(data);
-    if (err) {
-      // eslint-disable-next-line no-console
-      console.error(err.stack);
-      return;
-    }
-    usersParse(usersdb);
-  });
-};
+const usersPath = require(path.join(__dirname, '../data/users.json'));
 
 usersRouter.get('/users', (req, res) => {
-  users((data) => res.send(data));
+  res.send(usersPath);
 });
 
-usersRouter.get('/users/:id', (req, res) => {
-  fs.readFile(usersPath, { encoding: 'utf8' }, (err, data) => {
-    const usersdb = JSON.parse(data);
-    const item = (element) => {
-      if (element._id === req.params.id) {
-        return element;
-      }
-    };
-    if (usersdb.find(item) !== undefined) {
-      res.send(usersdb.find(item));
-    } else res.status(404).send({ message: 'Нет пользователя с таким id' });
-  });
-});
-
-usersRouter.get('/users/:id', (req, res) => {
-  fs.readFile(usersPath, { encoding: 'utf8' }, (err, data) => {
-    const usersdb = JSON.parse(data);
-    const item = (element) => {
-      if (element._id !== req.params.id) {
-        res.status(404).send({ message: 'Нет пользователя с таким id' });
-      }
-    };
-    usersdb.find(item);
-  });
+usersRouter.get('/users/:_id', (req, res) => {
+  const userItem = usersPath.find((item) => item._id === req.params._id);
+  if (userItem) {
+    res.send(userItem);
+    return;
+  }
+  res.status(404).send({ message: 'Нет пользователя с таким id' });
 });
 
 module.exports = usersRouter;
