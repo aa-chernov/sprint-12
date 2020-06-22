@@ -4,14 +4,14 @@
 const usersRouter = require('express').Router();
 const path = require('path');
 
-const usersPath = require(path.join(__dirname, '../data/users.json'));
+const usersArray = require(path.join(__dirname, '../data/users.json'));
 
 usersRouter.get('/users', (req, res) => {
-  res.send(usersPath);
+  res.send(usersArray);
 });
 
 usersRouter.get('/users/:_id', (req, res) => {
-  const userItem = usersPath.find((item) => item._id === req.params._id);
+  const userItem = usersArray.find((item) => item._id === req.params._id);
   if (userItem) {
     res.send(userItem);
     return;

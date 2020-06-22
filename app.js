@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const express = require('express');
 const path = require('path');
 const cardsPath = require('./routes/cards');
@@ -12,5 +14,7 @@ app
   .use(express.static(path.join(__dirname, 'public')))
   .use('/', cardsPath)
   .use('/', usersPath)
-  .use('*', resourcePath)
-  .listen(PORT);
+  .use('/', resourcePath)
+  .listen(PORT, () => {
+    console.log(`Слушаем порт: ${PORT}`);
+  });
